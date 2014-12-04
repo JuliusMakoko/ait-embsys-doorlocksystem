@@ -8,6 +8,11 @@
 
 /* Includes -----------------------------------------------------------------------*/
 #include "sic4310.h"
+#include <tsl.h>
+#include "relay.h"
+#include "util.h"
+#include <stdio.h>
+#include <string.h>
 
 /* Private constants --------------------------------------------------------------*/
 #define SIC4310_BAUDRATE    115200
@@ -51,22 +56,28 @@ void SIC4310_config()
     // Enable GPIOB and USART1
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-    
-    // Configure pin PB6 for Tx, pin PB7 for Rx 
+
+	
+	// Configure pin PB6 for Tx, pin PB7 for Rx
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource2, GPIO_AF_1);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_1);
+   
     gpio_init_struct.GPIO_Mode = GPIO_Mode_AF;
     gpio_init_struct.GPIO_OType = GPIO_OType_PP;
-    gpio_init_struct.GPIO_Speed = GPIO_Speed_Level_1;
-    gpio_init_struct.GPIO_PuPd = GPIO_PuPd_UP;    
+    gpio_init_struct.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio_init_struct.GPIO_PuPd = GPIO_PuPd_UP;      
+    gpio_init_struct.GPIO_Pin = GPIO_Pin_7;
+    GPIO_Init(GPIOB, &gpio_init_struct);
+               
+    // Configure Tx pin (D1) with AF  -> GPIOA_Pin_2
+    gpio_init_struct.GPIO_Mode = GPIO_Mode_AF;
+    gpio_init_struct.GPIO_OType = GPIO_OType_PP;
+    gpio_init_struct.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio_init_struct.GPIO_PuPd = GPIO_PuPd_UP;
     gpio_init_struct.GPIO_Pin = GPIO_Pin_6;
     GPIO_Init(GPIOB, &gpio_init_struct);
-    
-    gpio_init_struct.GPIO_Pin = GPIO_Pin_7;
-    GPIO_Init(GPIOB, &gpio_init_struct);  
-    
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_0);
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_0);
-    
-    // Configure USART1 for 115200,8,n,1
+
+	  // Configure USART1 for 115200,8,n,1
     usart_init_struct.USART_BaudRate = SIC4310_BAUDRATE;
     usart_init_struct.USART_WordLength = USART_WordLength_8b;
     usart_init_struct.USART_Parity = USART_Parity_No;
