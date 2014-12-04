@@ -23,37 +23,51 @@ uint8_t buff;
 TSL_Params_T TSL_Params;
 
 /**
-* @brief    Turn ON and OFF LEDs through channel 1 and 2 to Lock and Unlock a door
+* @brief    Turn ON and OFF LEDs through channel 1,2,3 and 4 to Lock and Unlock the doors
 */
 
 int main()
 {
 	  uint8_t byte;
-    uint8_t activate_relay = RELAY_CH1 | RELAY_CH2;
+    uint8_t activate_relay = RELAY_CH1 | RELAY_CH2 |RELAY_CH3 |RELAY_CH4;
 	  SIC4310_config();
     timebase_config();
 
   	relay_config(activate_relay);
-  	relay_turn_off(RELAY_CH1);			// DOOR Green LED
-		relay_turn_off(RELAY_CH2);			// DOOR Red LED
-		
+  	relay_turn_off(RELAY_CH1);			// DOOR-1 Green LED
+		relay_turn_off(RELAY_CH2);			// DOOR-1 Red LED
+		relay_turn_off(RELAY_CH3);			// DOOR-2 Green LED
+		relay_turn_off(RELAY_CH4);			// DOOR-2 Red LED
 	  
     while(1)
 		{
 			while (SIC4310_available())
       {
 					byte = SIC4310_read();
-				  // LOCK DOOR
+				  //lock door 01
           if (byte == 0X00) {
 						relay_turn_off(RELAY_CH1); //GREEN OFF
-						relay_turn_on(RELAY_CH2);  // RED ON
+						relay_turn_on(RELAY_CH2); //RED ON
+			
 					}
-				// UNLOCK DOOR
-					else if (byte == 0X11){
-							relay_turn_on(RELAY_CH1);  //GREEN ON
+					//unlock door 01
+					else if (byte == 0X01){
+							relay_turn_on(RELAY_CH1); //GREEN ON
 						  relay_turn_off(RELAY_CH2); //RED OFF
 							delay(1000);
 					}
+					//lock door 02
+					else if (byte == 0X10){
+							relay_turn_off(RELAY_CH3); //GREEN OFF
+						  relay_turn_on(RELAY_CH4); //RED ON
+							delay(1000);
+					}
+					//unlock door 02
+					else if (byte == 0X11){
+							relay_turn_on(RELAY_CH3); //GREEN ON
+						  relay_turn_off(RELAY_CH4); //RED OFF
+							delay(1000);
+					}					
         }
     }
 }
