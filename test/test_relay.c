@@ -1,6 +1,6 @@
 /**
 * @file      test_relay.c
-* @author    Supachai Vorapojpisut
+* @author    group project
 * @version   0.1
 * @date      November 4, 2014
 * @brief     Test code for relay module

@@ -1,6 +1,6 @@
 /**
 * @file      util.c
-* @author    Supachai Vorapojpisut
+* @author    group project
 * @version   1.0
 * @date      November 4, 2014
 * @brief     Collection of utility functions.
