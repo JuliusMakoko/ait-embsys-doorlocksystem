@@ -1,6 +1,6 @@
 /**
 * @file      relay.c
-* @author    Supachai Vorapojpisut
+* @author    group project
 * @version   1.0
 * @date      October 28, 2014
 * @brief     Relay module.
